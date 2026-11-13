@@ -8,7 +8,7 @@ export const useUserStore = create()(
             setUser: (user) => {
                 set({ user })
             },
-            clearUser: () => {
+            clearSession: () => {
                 set({ user: undefined })
             },
         }),

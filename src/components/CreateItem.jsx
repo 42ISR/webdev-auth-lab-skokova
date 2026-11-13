@@ -1,7 +1,42 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from './Input'
+import { api } from "../api/api"
+import { useState } from 'react'
+import { useItemStore } from '../store/useItemStore'
 
 const CreateItem = () => {
+    const [error, setError] = useState()
+    const navigate = useNavigate()
+    const { getItems } = useItemStore()
+
+    const handleSubmit= async (e) => {
+        e.preventDefault()
+        setError()
+    
+
+    const item = {
+        title: e.target.title.value,
+        description: e.target.description.value,
+        price: Number(e.target.price.value),
+    }
+
+    if (e.target.imageUrl.value) {
+        item.imageUrl = e.target.imageUrl.value
+    }
+
+    try {
+        await api.sendItems(item)
+
+        await getItems()
+        navigate("/")
+    } catch (err) {
+        console.error(err)
+        const errorMessage = error.response?.data.error || "Ошибка при создании товара"
+        setError(errorMessage)
+    }
+
+    }
+
     return (
         <div className="container">
             <div class="page-header">
@@ -9,7 +44,12 @@ const CreateItem = () => {
             </div>
 
             <div class="form-container">
-                <form id="create-item-form">
+                {error && (
+                <div className="alert alert-error active">
+                    {error}
+                </div>
+                )}
+                <form onSubmit={handleSubmit} id="create-item-form">
                     <div class="form-group">
                         <label class="form-label">
                             Название товара <span class="required">*</span>
@@ -84,7 +124,7 @@ const CreateItem = () => {
                     </div>
 
                     <div class="form-actions">
-                        <Link href="/" class="btn-cancel">
+                        <Link to="/" class="btn-cancel">
                             Отмена
                         </Link>
                         <button type="submit" class="btn-submit">

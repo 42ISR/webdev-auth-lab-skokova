@@ -1,8 +1,35 @@
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Input from '../components/Input'
 import Button from '../components/Button'
+import { useEffect, useState } from 'react'
+import { useItemStore } from '../store/useItemStore'
 
 const ItemDetail = () => {
+    const { id } = useParams()
+    const items = useItemStore((state) => state.items)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const getItem = useItemStore((state) => state.getItems)
+
+    useEffect(() => {
+    const loadData = async () => {
+        try {
+            await getItem(id)
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+    
+        loadData()
+    }, [getItem,id])
+
+    if (!isLoading) return <div className="container">Загрузка...</div>
+
+    if (!item) {
+        return <div className="container">Товар не найден</div>
+    }
 
     return (
         <div className="container">
@@ -17,13 +44,13 @@ const ItemDetail = () => {
                     <div class="item-info">
                         <span class="item-status">Активное</span>
 
-                        <h1 class="item-title-large">Название</h1>
+                        <h1 class="item-title-large">{item.title}</h1>
 
                         <div class="item-seller-info">
                             <div class="seller-avatar">Первые 2 символа с юзернейма</div>
                             <div class="seller-details">
                                 <div class="seller-name">
-Юзернейм
+                                    {title.username}
                                 </div>
                                 <div class="seller-date">
 Когда создан
@@ -32,14 +59,17 @@ const ItemDetail = () => {
                         </div>
 
                         <div class="item-description-full">
-Описание
+                            {item.description}
                         </div>
 
                         <div class="price-section">
-                            <div class="starting-price">Начальная цена:</div>
+                            <div class="starting-price">Начальная цена: {item.price}</div>
                             <div class="current-price">Цена</div>
                             <div class="highest-bid">
-                                Текущая ставка: Ставка
+                                {item.highestBid !== null
+                                ? `Текущая ставка: ${item.highestBid}`
+                                : "Ставок нет"
+                                }
                             </div>
 
                             <form class="bid-form">
@@ -48,7 +78,7 @@ const ItemDetail = () => {
                                     name="bidInput"
                                     class="bid-input"
                                     placeholder="Введите вашу ставку (мин. стоимость + 1 рубль ₽)"
-                                    min={0}
+                                    min={(item.highestBid ?? ImageBitmap.price) + 1}
                                     step="100"
                                 />
                                 <Button type="submit" class="btn-bid">
@@ -62,7 +92,7 @@ const ItemDetail = () => {
                 <div class="bids-section">
                     <div class="bids-header">
                         <h2 class="bids-title">История ставок</h2>
-                        <span class="bids-count">5</span>
+                        <span class="bids-count">0</span>
                     </div>
 
                     <div class="bids-list">

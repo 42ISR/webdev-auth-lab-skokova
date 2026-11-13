@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useItemsStore } from "../store/useItemsStore";
+import { useUserStore } from "../store/useUserStore";
 
 const apiInstance = axios.create({
-    baseURL: "hhttps://api.kitek-pg.ru/api/marketplace/",
+    baseURL: "https://api.kitek-pg.ru/api/marketplace/",
     headers: {
         "Content-Type": "application/json",
         Aceept: "application/json",
@@ -20,7 +20,7 @@ apiInstance.interceptors.request.use(config => {
 })
 
 const registerUser = async (user) => {
-    const res = apiInstance.post("/register", user)
+    const res = apiInstance.post("auth/register", user)
     return res
 }
 
@@ -33,6 +33,12 @@ const getItems = async () => {
     const res = apiInstance.get("/items")
     return res
 }
+
+const getItem = async (id) => {
+    const res = apiInstance.get(`/items/${id}`)
+    return res
+}
+
 
 const getStats = async () => {
     const res = apiInstance.get("/stats")
@@ -74,5 +80,6 @@ export const api = {
     sendItems,
     deleteItems,
     createBid,
+    getItem
 
 }

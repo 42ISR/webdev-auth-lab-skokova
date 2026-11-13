@@ -3,6 +3,7 @@ import Button from "../components/Button"
 import Input from "../components/Input"
 import { useState } from "react"
 import { useUserStore } from "../store/useUserStore"
+import { api } from "../api/api"
 
 const Login = () => {
     const [error, setError] = useState("")

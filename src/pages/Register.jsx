@@ -3,6 +3,7 @@ import Button from '../components/Button'
 import Input from '../components/Input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserStore } from '../store/useUserStore'
+import { api } from '../api/api'
 
 const Register = () => {
     const [error, setError] = useState("")
@@ -22,6 +23,8 @@ const Register = () => {
             password: e.target.password.value, 
         }
 
+        if (e.target.email.value) user.email = e.target.email.value
+
         try{
             const data = await api.registerUser(user)
             setUser(data.data)
@@ -29,6 +32,7 @@ const Register = () => {
         } catch(error) {
             console.error(error)
             setError(error.response.data.error)
+           
         }
     }
 

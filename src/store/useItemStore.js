@@ -7,7 +7,7 @@ export const useItemStore = create((set) => ({
         try {
             const res = own 
             ?  await api.getItemBids() 
-            :  await api.geItems()
+            :  await api.getItems()
             set( {items: res.data })
         } catch (error) {
             console.error(error)
