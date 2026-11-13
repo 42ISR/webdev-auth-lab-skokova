@@ -2,19 +2,18 @@ import { Link, useParams } from 'react-router-dom'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import { useEffect, useState } from 'react'
-import { useItemStore } from '../store/useItemStore'
+import { api } from "../api/api"
 
 const ItemDetail = () => {
     const { id } = useParams()
-    const items = useItemStore((state) => state.items)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
-    const getItem = useItemStore((state) => state.getItems)
-
+    const [item, setItem] = useState(null)
     useEffect(() => {
     const loadData = async () => {
         try {
-            await getItem(id)
+            
+            setItem(await api.getItem(id))
         } catch (error) {
             console.error(error)
         } finally {
@@ -23,7 +22,7 @@ const ItemDetail = () => {
     }
     
         loadData()
-    }, [getItem,id])
+    }, [id])
 
     if (!isLoading) return <div className="container">Загрузка...</div>
 
