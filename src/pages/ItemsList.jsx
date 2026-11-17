@@ -24,7 +24,6 @@ const ItemsList = () => {
     }, [getItems])
 
 
-
     return (
         <div className="container">
             <div className="page-header">

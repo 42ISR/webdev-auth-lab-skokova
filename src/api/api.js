@@ -45,7 +45,7 @@ const getStats = async () => {
     return res
 }
 
-const getItemBids = async () => {
+const getItemBids = async (id) => {
     const res = apiInstance.get(`/items/${id}/bids`)
     return res.data
 }
@@ -65,8 +65,8 @@ const deleteItems = async (id) => {
     return res
 }
 
-const createBid = async (id, amount) => {
-    const res = apiInstance.post(`/items/${id}`, {amount})
+const createBid = async ({id, amount}) => {
+    const res = apiInstance.post(`/items/${id}/bids`, {amount})
     return res.data
 }
 
